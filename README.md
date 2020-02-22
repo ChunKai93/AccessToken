@@ -77,6 +77,23 @@ filepath = "/"
 Rsync同步命令 ***rsync -avrtzopgPW --delete --exclude=conf --progress --port=873 
 --password-file=/etc/rsync/rsync.pass  test@*::access_token /files/go/src/wcjs/access_token***
 
+### accesstoken.service
+```
+[Unit]
+Description=Go Web Service for Weixin Access Token
+#After=network.target
+
+[Service]
+Type=simple
+ExecStart=/files/go/src/wcjs/access_token/access_token
+WorkingDirectory=/files/go/src/wcjs/access_token/
+Restart=on-failure
+RestartSec=5s
+RestartPreventExitStatus=23
+
+[Install]
+WantedBy=multi-user.target
+```
 
 ## 请求测试
 服务只能在已构成局域网的测试和生产几台机器上请求
