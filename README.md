@@ -1,22 +1,23 @@
 # 这是一个go重写的获取微信access_token的一个web服务项目
 ---
 ## 目录
-- common:公共函数包
- - db.go:初始化redis和mysql客户端连接
- - fun.go:公共函数
-- conf:配置文件(git忽略，需要自行创建)
- - app.conf:项目配置信息
- - chemm_mysql.json:MySQL信息
+
+- common:公共函数包 
+    - db.go:初始化redis和mysql客户端连接
+    - fun.go:公共函数
+- conf:配置文件(git忽略，需要自行创建) 
+    - app.conf:项目配置信息
+    - chemm_mysql.json:MySQL信息
 - configs：
- - config.go 
- - ini.go:初始化ini配置文件
- - json.go:初始化json配置文件
+    - config.go 
+    - ini.go:初始化ini配置文件
+    - json.go:初始化json配置文件
 - controllers:控制器
- - errorcode.go:定义map报错码
- - json.go:返回自定义json数据结构处理
- - weixin.go:获取access_token
+    - errorcode.go:定义map报错码
+    - json.go:返回自定义json数据结构处理
+    - weixin.go:获取access_token
 - routers
- - routes.go:项目路由
+    - routes.go:项目路由
 - main.go:入口文件
 - access_token:go build生成的可执行二进制文件
 
@@ -61,7 +62,7 @@ filepath = "/"
 ```
 
 ## 生产环境
-登陆测试环境后，*** 命令登陆争霸生产机；
+登陆测试环境后，*** 命令登陆生产机；
 
 项目工作目录为 ***$GOPATH/src/wcjs/access_token*** ，监听 ***7091*** 端口;
 
