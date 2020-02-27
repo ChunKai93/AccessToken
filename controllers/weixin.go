@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"sync"
 	"time"
 	"wcjs/access_token/common"
 	"wcjs/lib/session"
@@ -14,6 +15,7 @@ const API_URL_PREFIX = "https://api.weixin.qq.com/cgi-bin"
 const AUTH_URL = "/token?grant_type=client_credential&"
 
 type WeixinController struct {
+	Mu *sync.RWMutex
 	JsonController
 }
 
@@ -26,6 +28,7 @@ type WeixinStruct struct {
 
 func NewWeixinController() *WeixinController {
 	ac := &WeixinController{
+		&sync.RWMutex{},
 		JsonController{
 			Sm:       session.NewSession(),
 			HostName: "angelandy_pc",
@@ -44,11 +47,14 @@ func (weixin *WeixinController) GetToken(w http.ResponseWriter, r *http.Request,
 	appsecret := d["appsecret"]
 
 	//读redis
+	weixin.Mu.RLock()
 	cache_name := "CMMAPI_wechat_access_token" + appid
 	access_token, _ := common.RedisDB.Get(cache_name).Result()
+	weixin.Mu.RUnlock()
 
 	//写redis
 	if access_token == "" {
+		weixin.Mu.Lock()
 		url := API_URL_PREFIX + AUTH_URL + "appid=" + appid + "&secret=" + appsecret
 		res := common.Get(url)
 		ws := WeixinStruct{}
@@ -59,11 +65,10 @@ func (weixin *WeixinController) GetToken(w http.ResponseWriter, r *http.Request,
 		if ws.errorCode == 0 {
 			access_token = ws.AccessToken
 
-			//expire := ws.ExpiresIn - 1000
-			//common.RedisDB.Set(cache_name, ws.AccessToken, time.Duration(expire))
-
-			common.RedisDB.Set(cache_name, ws.AccessToken, 6200*time.Second)
+			expire := ws.ExpiresIn - 1000
+			common.RedisDB.Set(cache_name, ws.AccessToken, time.Duration(expire) * time.Second)
 		}
+		weixin.Mu.Unlock()
 	}
 
 	fmt.Fprintf(w, access_token)
