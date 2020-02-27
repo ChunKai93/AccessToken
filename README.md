@@ -66,16 +66,16 @@ filepath = "/"
 
 项目工作目录为 ***$GOPATH/src/wcjs/access_token*** ，监听 ***7091*** 端口;
 
-项目更新记得进到工作目录，***go build*** 重新编译生成可执行文件 ***access_token*** ;
-
 守护进程文件为 ***/etc/systemd/system/accesstoken.service*** ;
 
 开启服务命令 ***systemctl start accesstoken*** ;
 
 关闭服务命令 ***systemctl stop accesstoken*** ;
 
-Rsync同步命令 ***rsync -avrtzopgPW --delete --exclude=conf --progress --port=873 
+Rsync同步命令 ***rsync -avrtzopgPW --exclude=conf --progress --port=873 
 --password-file=/etc/rsync/rsync.pass  test@*::access_token /files/go/src/wcjs/access_token***
+
+项目更新记得进到工作目录，***go build*** 重新编译生成可执行文件 ***access_token*** ;
 
 ### accesstoken.service
 ```
